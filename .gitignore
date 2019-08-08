@@ -2,3 +2,5 @@
 **/*.rs.bk
 /src/reverse-integer/target
 src/string-to-integer-atoi/target
+/src/**/.exercism
+/src/**/target
