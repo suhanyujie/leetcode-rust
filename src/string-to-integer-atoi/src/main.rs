@@ -9,8 +9,6 @@
 */
 
 fn main() {
- 
-
     let str1 = String::from("-123你是谁");
     let str1_ori = str1.clone();
     let num1 = Solution::my_atoi(str1);
@@ -34,6 +32,12 @@ impl Solution {
             }
             num_arr.push(x);
             true
+        });
+        num_arr.iter().map(|x| {
+            if (x == '-') {
+                return false;
+            }
+            
         });
         println!("{:?}", num_arr);
         0
