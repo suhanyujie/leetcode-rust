@@ -4,3 +4,4 @@
 src/string-to-integer-atoi/target
 /src/**/.exercism
 /src/**/target
+/src/*/target
