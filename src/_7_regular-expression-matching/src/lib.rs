@@ -1,9 +1,9 @@
 /// https://leetcode-cn.com/problems/regular-expression-matching/
-/// 
+///
 /// 回溯法
-/// 
+///
 #[derive(Debug)]
-struct Solution{}
+struct Solution {}
 
 impl Solution {
     pub fn is_match(s: String, p: String) -> bool {
