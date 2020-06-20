@@ -1,0 +1,46 @@
+/// 题目地址 https://leetcode-cn.com/problems/jump-game-ii/
+
+struct Solution;
+
+
+/*
+输入: [2,3,1,1,4]
+输出: 2
+解释: 跳到最后一个位置的最小跳跃数是 2。
+     从下标为 0 跳到下标为 1 的位置，跳 1 步，然后跳 3 步到达数组的最后一个位置。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/jump-game-ii
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+*/
+/// 老实说，做这题之前，我还不知道什么是动态规划，因此对这题的我第一思路是直接暴力破解
+
+
+impl Solution {
+    pub fn jump(nums: Vec<i32>) -> i32 {
+        let res = 0;
+        nums.iter().for_each(|cur_num| {
+            println!("{}", cur_num);
+        });
+        res
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+
+    #[test]
+    fn test_jump1() {
+        let input = vec![2,3,1,1,4];
+        let output = Solution::jump(input);
+        println!("the result is:{}", output);
+        assert!(false);
+    }
+}
