@@ -10,9 +10,8 @@ struct Solution;
 
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/jump-game-ii
-著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 */
-/// 老实说，做这题之前，我还不知道什么是动态规划，因此对这题的我第一思路是直接暴力破解
+/// 老实说，做这题之前，我还不知道什么是动态规划，因此对这题的我第一思路是直接暴力破解，但是看了「力扣」的题解，对动态规划才有了一丝丝的理解
 
 impl Solution {
     pub fn jump(nums: Vec<i32>) -> i32 {
