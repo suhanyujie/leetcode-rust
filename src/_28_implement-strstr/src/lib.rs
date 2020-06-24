@@ -27,8 +27,8 @@ struct Solution;
 /// 使用双层循环的方式，外层循环，只需要到 (haystack_bytes.len() - needle_bytes.len())
 impl Solution {
     pub fn str_str(haystack: String, needle: String) -> i32 {
-        let bytes1 = haystack.as_bytes();
-        let haystack_len = bytes1.len();
+        let haystack_bytes = haystack.as_bytes();
+        let haystack_len = haystack_bytes.len();
         let needle_bytes = needle.as_bytes();
         let needle_len = needle.len();
         let mut return_flag = -1;
@@ -36,16 +36,16 @@ impl Solution {
             return_flag = 0;
             return return_flag;
         }
-        if bytes1.len() < 1 {
+        if haystack_bytes.len() < 1 {
             return return_flag as i32;
         }
-        if bytes1.len() < needle_bytes.len() {
+        if haystack_bytes.len() < needle_bytes.len() {
             return return_flag;
         }
-        // 外层循环，只需要移动到 bytes1.len() - needle_bytes.len()
+        // 外层循环，只需要移动到 haystack_bytes.len() - needle_bytes.len()
         for index1 in 0..=(haystack_len - needle_len) {
             for index2 in 0..needle_bytes.len() {
-                if needle_bytes[index2] != bytes1[index1 + index2] {
+                if needle_bytes[index2] != haystack_bytes[index1 + index2] {
                     break;
                 } else {
                     if index2 == needle_bytes.len() - 1 {
