@@ -24,7 +24,7 @@ struct Solution;
 
 */
 
-///
+/// 使用双层循环的方式，外层循环，只需要到 (haystack_bytes.len() - needle_bytes.len())
 impl Solution {
     pub fn str_str(haystack: String, needle: String) -> i32 {
         let bytes1 = haystack.as_bytes();
