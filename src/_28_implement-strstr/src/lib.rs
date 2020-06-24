@@ -35,20 +35,17 @@ impl Solution {
         }
         if needle_bytes.len() < 1 {
             return_flag = 0;
-            return 0;
+            return return_flag;
         }
         if bytes1.len() < 1 {
             return return_flag as i32;
         }
         for index1 in 0..bytes1.len() {
-            return_flag = -1;
             for index2 in 0..needle_bytes.len() {
                 if index1 + index2 >= bytes1.len() {
-                    return_flag = -1;
                     break;
                 }
                 if needle_bytes[index2] != bytes1[index1 + index2] {
-                    return_flag = -1;
                     break;
                 } else {
                     if index2 == needle_bytes.len() - 1 {
