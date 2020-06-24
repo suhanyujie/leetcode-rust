@@ -28,11 +28,10 @@ struct Solution;
 impl Solution {
     pub fn str_str(haystack: String, needle: String) -> i32 {
         let bytes1 = haystack.as_bytes();
+        let haystack_len = bytes1.len();
         let needle_bytes = needle.as_bytes();
+        let needle_len = needle.len();
         let mut return_flag = -1;
-        if bytes1.len() < needle_bytes.len() {
-            return return_flag;
-        }
         if needle_bytes.len() < 1 {
             return_flag = 0;
             return return_flag;
@@ -40,11 +39,12 @@ impl Solution {
         if bytes1.len() < 1 {
             return return_flag as i32;
         }
-        for index1 in 0..bytes1.len() {
+        if bytes1.len() < needle_bytes.len() {
+            return return_flag;
+        }
+        // 外层循环，只需要移动到 bytes1.len() - needle_bytes.len()
+        for index1 in 0..=(haystack_len - needle_len) {
             for index2 in 0..needle_bytes.len() {
-                if index1 + index2 >= bytes1.len() {
-                    break;
-                }
                 if needle_bytes[index2] != bytes1[index1 + index2] {
                     break;
                 } else {
