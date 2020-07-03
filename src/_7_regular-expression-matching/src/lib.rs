@@ -45,24 +45,37 @@ struct Solution {}
 
 impl Solution {
     pub fn is_match(s: String, p: String) -> bool {
-        return Solution::trace_back(s, p);
+        let s_vec: Vec<char> = s.chars().collect();
+        let p_vec: Vec<char> = p.chars().collect();
+        return Solution::style_1(s_vec, p_vec);
     }
-    /// 回溯法
-    fn trace_back(s: String, p: String) -> bool {
+
+    /// 从右往前匹配  类似于动态规划
+    fn style_1(s: Vec<char>, p: Vec<char>) -> bool {
         if p.is_empty() {
             return true;
         }
         if s.is_empty() && p.is_empty() {
             return true;
         }
-        let s_vec: Vec<char> = s.chars().collect();
-        let p_vec: Vec<char> = p.chars().collect();
-        for c1 in s_vec {
-            
+        let s_vec: Vec<char> = s;
+        let p_vec: Vec<char> = p;
+        let  s_l = s_vec.len();
+        let  p_l = p_vec.len();
+        let mut i = s_l-1;
+        let mut j = p_l-1;
+        while i >=0 && j >=0 {
+            if s_vec[i] == p_vec[j] {
+                return Solution::style_1(s_vec[0..i].to_vec(), p_vec[0..j].to_vec());
+            } else if p_vec[j] == '*'{
+                return Solution::style_1(s_vec[0..=i].to_vec(), p_vec[0..j].to_vec());
+            } else if p_vec[j] == '.' {
+                return true;
+            } else {
+                return false;
+            }
         }
-        println!("{:?}", s_vec);
         return false;
-        // Solution::trace_back(s.to_string(), p.to_string())
     }
 }
 
@@ -72,10 +85,25 @@ mod tests {
 
     #[test]
     fn test_trace_back() {
-        assert_eq!(Solution::is_match("this aaa".to_string(), "this a*".to_string()), true);
+        assert_eq!(
+            Solution::is_match("this aaa".to_string(), "this a*".to_string()),
+            true
+        );
         assert_eq!(Solution::is_match("aa".to_string(), "a".to_string()), false);
         assert_eq!(Solution::is_match("aa".to_string(), "a*".to_string()), true);
         assert_eq!(Solution::is_match("ab".to_string(), ".*".to_string()), true);
-        assert_eq!(Solution::is_match("aab".to_string(), "c*a*b".to_string()), true);
+        assert_eq!(
+            Solution::is_match("aab".to_string(), "c*a*b".to_string()),
+            true
+        );
+    }
+
+    #[test]
+    fn test_some_func() {
+        let s1  = r#"this is"#.to_string();
+        let arr1: Vec<char> = s1.chars().collect();
+        let i = arr1.len()-1;
+        println!("{:?}", arr1[0..=i].to_vec());
+        assert!(false);
     }
 }
