@@ -60,22 +60,19 @@ impl Solution {
         }
         let s_vec: Vec<char> = s;
         let p_vec: Vec<char> = p;
-        let  s_l = s_vec.len();
-        let  p_l = p_vec.len();
-        let mut i = s_l-1;
-        let mut j = p_l-1;
-        while i >=0 && j >=0 {
-            if s_vec[i] == p_vec[j] {
-                return Solution::style_1(s_vec[0..i].to_vec(), p_vec[0..j].to_vec());
-            } else if p_vec[j] == '*'{
-                return Solution::style_1(s_vec[0..=i].to_vec(), p_vec[0..j].to_vec());
-            } else if p_vec[j] == '.' {
-                return true;
-            } else {
-                return false;
-            }
+        let s_l = s_vec.len();
+        let p_l = p_vec.len();
+        let mut i = s_l - 1;
+        let mut j = p_l - 1;
+        if s_vec[i] == p_vec[j] {
+            return Solution::style_1(s_vec[0..i].to_vec(), p_vec[0..j].to_vec());
+        } else if p_vec[j] == '*' {
+            return Solution::style_1(s_vec[0..=i].to_vec(), p_vec[0..j].to_vec());
+        } else if p_vec[j] == '.' {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }
 
@@ -100,9 +97,9 @@ mod tests {
 
     #[test]
     fn test_some_func() {
-        let s1  = r#"this is"#.to_string();
+        let s1 = r#"this is"#.to_string();
         let arr1: Vec<char> = s1.chars().collect();
-        let i = arr1.len()-1;
+        let i = arr1.len() - 1;
         println!("{:?}", arr1[0..=i].to_vec());
         assert!(false);
     }

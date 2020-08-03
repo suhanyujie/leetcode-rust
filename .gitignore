@@ -8,3 +8,4 @@ src/string-to-integer-atoi/target
 /src/*/.vscode
 /src/*/.idea
 /src/*/.github
+.DS_Store
