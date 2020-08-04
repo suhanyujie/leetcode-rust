@@ -15,13 +15,13 @@ impl Solution {
         let mut j = (b2.len() - 1) as isize;
         let mut add = 0;
         let mut res = String::from("");
-        let mut n1: u8 = 0;
-        let mut n2: u8 = 0;
+        let mut n1: u8;
+        let mut n2: u8;
         loop {
             n1 = if i < 0 { 0 } else { b1[i as usize] - '0' as u8 };
             n2 = if j < 0 { 0 } else { b2[j as usize] - '0' as u8 };
             let single_bit_res = n1 + n2 + add;
-            let mut tmp_ch: u8 = 0;
+            let tmp_ch: u8;
             if single_bit_res > 9 {
                 add = 1;
                 let single_res = single_bit_res % 10;
@@ -33,7 +33,7 @@ impl Solution {
             res = tmp_ch.to_string() + res.as_ref();
             i -= 1;
             j -= 1;
-            if i<0 && j<0 {
+            if i < 0 && j < 0 {
                 if add > 0 {
                     res = '1'.to_string() + res.as_ref();
                 }
@@ -64,9 +64,6 @@ mod tests {
         assert_eq!('2' as u8, ('0' as u8) + 2);
         // Rust 字符串和字符类型的拼接
         let tmp_s1 = String::from(" hello");
-        assert_eq!(
-            '1'.to_string() + tmp_s1.as_ref(),
-            "1 hello"
-        );
+        assert_eq!('1'.to_string() + tmp_s1.as_ref(), "1 hello");
     }
 }
