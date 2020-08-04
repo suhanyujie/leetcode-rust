@@ -62,6 +62,11 @@ mod tests {
         assert_eq!(1, '1' as u8 - '0' as u8);
         // 数值类型转换为字符类型
         assert_eq!('2' as u8, ('0' as u8) + 2);
-        // Rust 字符串拼接字符类型
+        // Rust 字符串和字符类型的拼接
+        let tmp_s1 = String::from(" hello");
+        assert_eq!(
+            '1'.to_string() + tmp_s1.as_ref(),
+            "1 hello"
+        );
     }
 }
