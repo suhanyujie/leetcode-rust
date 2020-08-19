@@ -1,3 +1,6 @@
+//! 题目地址：https://exercism.io/my/solutions/eef89f13ae1645ee9fbfbed243e246e0
+//! 优化方向：实际上无需迭代地进行加法计算，而只需计算 2 的 n 次幂的运算即可。
+
 pub fn square(s: u32) -> u64 {
     if s < 1 || s > 64 {
         panic!("Square must be between 1 and 64");
