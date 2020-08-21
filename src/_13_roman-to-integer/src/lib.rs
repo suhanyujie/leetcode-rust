@@ -4,6 +4,8 @@
 
 struct Solution {}
 
+use std::collections::HashMap;
+
 impl Solution {
     pub fn roman_to_int(s: String) -> i32 {
         let mut res_num = 0;
@@ -50,31 +52,30 @@ impl Solution {
 
     // 检查数值是否是特殊的数值
     pub fn chech_unit_exist(s1: &str) -> Option<i32> {
-        let unit_list: Vec<(&'static str, i32)> = Solution::get_units();
-        for i in 0..unit_list.len() {
-            if unit_list[i].0 == s1 {
-                return Some(unit_list[i].1);
-            }
+        let unit_list: HashMap<&'static str, i32> = Solution::get_units();
+        if let Some(num) = unit_list.get(s1) {
+            Some(*num)
+        } else {
+            None
         }
-        None
     }
 
-    pub fn get_units() -> Vec<(&'static str, i32)> {
-        let unit_list: Vec<(&'static str, i32)> = vec![
-            ("M", 1000),
-            ("CM", 900),
-            ("D", 500),
-            ("CD", 400),
-            ("C", 100),
-            ("XC", 90),
-            ("L", 50),
-            ("XL", 40),
-            ("X", 10),
-            ("IX", 9),
-            ("V", 5),
-            ("IV", 4),
-            ("I", 1),
-        ];
+    pub fn get_units() -> HashMap<&'static str, i32> {
+        let mut unit_list = HashMap::new();
+        unit_list.insert("M", 1000);
+        unit_list.insert("CM", 900);
+        unit_list.insert("D", 500);
+        unit_list.insert("CD", 400);
+        unit_list.insert("C", 100);
+        unit_list.insert("XC", 90);
+        unit_list.insert("L", 50);
+        unit_list.insert("XL", 40);
+        unit_list.insert("X", 10);
+        unit_list.insert("IX", 9);
+        unit_list.insert("V", 5);
+        unit_list.insert("IV", 4);
+        unit_list.insert("I", 1);
+        
         unit_list
     }
 }
