@@ -118,7 +118,6 @@ mod tests {
         let root = TreeNode::load_tree(vec![3, 9, 20, 15, 7]);
         let node = TreeNode::new(3);
         let node = Some(Rc::new(RefCell::new(node)));
-        // assert_eq!(1, 0);
         assert_ne!(node, root);
         // assert_eq!(2, Solution::min_depth(root));
     }
