@@ -1,4 +1,5 @@
 //! 题目地址：https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
+//! 其他参考：https://github.com/zhangyuang/leetcode
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -71,7 +72,7 @@ impl TreeNode {
                             break;
                         } else {
                             // 获取 right 值的 rc 引用
-                            current_node_tmp = TreeNode::get_rc(&(node_tr.right));
+                            current_node_tmp = Solution::get_rc(&(node_tr.right));
                         }
                     } else {
                         if node_tr.left == None {
@@ -79,11 +80,11 @@ impl TreeNode {
                             break;
                         } else {
                             // 获取 right 值的 rc 引用
-                            current_node_tmp = TreeNode::get_rc(&(node_tr.left));
+                            current_node_tmp = Solution::get_rc(&(node_tr.left));
                         }
                     }
                 }
-                _ => {panic!("something todo")}
+                _ => panic!("something todo"),
             }
             current_node = current_node_tmp;
             c1 += 1;
@@ -91,6 +92,34 @@ impl TreeNode {
                 break;
             }
         }
+    }
+}
+
+impl Solution {
+    pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let min_depth = Solution::get_depth(&root);
+        min_depth
+    }
+
+    pub fn get_depth(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if node.is_none() {
+            return 0;
+        }
+        let node_rc = Solution::get_rc(node).unwrap();
+        let left_depth = Solution::get_depth(&node_rc.borrow().left);
+        let right_depth = Solution::get_depth(&node_rc.borrow().right);
+        if node_rc.borrow().left.is_none() || node_rc.borrow().right.is_none() {
+            return left_depth + right_depth + 1;
+        }
+
+        let res = Solution::min(left_depth, right_depth) + 1;
+        return res;
+    }
+
+    pub fn min(left_depth: i32, right_depth: i32) -> i32 {
+        let res = if left_depth < right_depth {left_depth} else {right_depth};
+        // println!("left:{} right:{} -> {}", left_depth, right_depth, res);
+        res
     }
 
     pub fn get_rc(rc_rc: &Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
@@ -103,15 +132,35 @@ impl TreeNode {
     }
 }
 
-impl Solution {
-    pub fn min_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
-        0
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_min_depth() {
+        let root = TreeNode::load_tree(vec![3, 9, 20, 15, 7]);
+        assert_eq!(3, Solution::min_depth(root));
+    }
+    
+    #[test]
+    fn test_get_depth1() {
+        let node = TreeNode::new(3);
+        let root_rc = Rc::new(RefCell::new(node));
+        let new1 = TreeNode::new(1);
+        let new1_op = Some(Rc::new(RefCell::new(new1)));
+        let root_op = Some(Rc::clone(&root_rc));
+        TreeNode::insert(root_op, new1_op);
+
+        let root_op = Some(Rc::clone(&root_rc));
+        assert_eq!(Solution::get_depth(&root_op), 2);
+    }
+
+    #[test]
+    fn test_min1() {
+        assert_eq!(Solution::min(1, 2), 1);
+        assert_eq!(Solution::min(100, 2), 2);
+        assert_eq!(Solution::min(2, 2), 2);
+    }
 
     #[test]
     fn it_works() {
@@ -136,6 +185,6 @@ mod tests {
         TreeNode::insert(root_op, new2_op);
 
         println!("{:?}", Rc::clone(&root_rc));
-        assert!(false);
+        assert!(true);
     }
 }
