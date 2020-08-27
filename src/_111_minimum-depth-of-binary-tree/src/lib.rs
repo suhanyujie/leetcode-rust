@@ -132,9 +132,52 @@ impl Solution {
     }
 }
 
+trait TreeTrait {
+    // 实例化一棵树
+    fn new(value: i32) -> Self;
+
+    // 插入
+    fn insert(self: &mut Self, value: i32) -> Result<i32, String>;
+    
+    // 删除
+    fn delete(self: &mut Self, value: i32) -> Result<i32, String>;
+}
+
+#[derive(Debug)]
+struct Tree {
+    root: Option<Rc<RefCell<TreeNode>>>,
+    length: u32,
+}
+
+impl TreeTrait for Tree {
+    // 返回的是包装后的根节点
+    fn new(value: i32) -> Tree {
+        let node = TreeNode::new(value);
+        Tree {
+            root: Some(Rc::new(RefCell::new(node))),
+            length: 1,
+        }
+    }
+    fn insert(self: &mut Tree, value: i32) -> Result<i32, String> {
+        todo!()
+    }
+    fn delete(self: &mut Self, value: i32) -> Result<i32, String> {
+        todo!()
+    }
+    
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_tree_new() {
+        let tree = Tree::new(3);
+        let v1 = tree.root.unwrap().borrow().val;
+   
+        assert_eq!(v1, 3);
+    }
 
     #[test]
     fn test_min_depth() {
@@ -168,7 +211,6 @@ mod tests {
         let node = TreeNode::new(3);
         let node = Some(Rc::new(RefCell::new(node)));
         assert_ne!(node, root);
-        // assert_eq!(2, Solution::min_depth(root));
     }
 
     #[test]
