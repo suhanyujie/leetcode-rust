@@ -183,6 +183,7 @@ impl TreeTrait for Tree {
                     if new_node_val > node_tr.val {
                         if node_tr.right == None {
                             node_tr.right = new_node;
+                            self.length += 1;
                             return Ok(1);
                         } else {
                             // 获取 right 值的 rc 引用
@@ -191,6 +192,7 @@ impl TreeTrait for Tree {
                     } else {
                         if node_tr.left == None {
                             node_tr.left = new_node;
+                            self.length += 1;
                             return Ok(1);
                         } else {
                             // 获取 right 值的 rc 引用
@@ -244,12 +246,6 @@ impl Tree {
         }
     }
 
-    fn is_equal(left_node: &Option<Rc<RefCell<TreeNode>>>, right_node: &Option<Rc<RefCell<TreeNode>>>) -> bool {
-        let l = Tree::get_rc(left_node);
-        let r = Tree::get_rc(right_node);
-        return l.unwrap().borrow().val == r.unwrap().borrow().val;
-    }
-
     fn get_val(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let rc = Tree::get_rc(node);
         return rc.unwrap().borrow().val;
@@ -295,6 +291,8 @@ mod tests {
                 }
             }
         }
+        // 3,4,9,6,10,11,5
+        assert_eq!(7, tree.length);
     }
 
     #[test]
@@ -302,7 +300,14 @@ mod tests {
         let tree = Tree::new(3);
         let v1 = tree.root.unwrap().borrow().val;
    
-        assert_eq!(v1, 3);
+        assert_eq!(3, v1);
+        assert_eq!(1, tree.length);
+    }
+
+    #[test]
+    fn test_get_val() {
+        let node = Some(Rc::new(RefCell::new(TreeNode::new(3))));
+        assert_eq!(3, node.unwrap().borrow().val);
     }
 
     #[test]
