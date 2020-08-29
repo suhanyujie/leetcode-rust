@@ -138,6 +138,9 @@ trait TreeTrait {
 
     // 插入
     fn insert(self: &mut Self, value: i32) -> Result<i32, String>;
+
+    // 搜索
+    fn search(self: &mut Self, value: i32) -> Option<Rc<RefCell<TreeNode>>>;
     
     // 删除
     fn delete(self: &mut Self, value: i32) -> Result<i32, String>;
@@ -158,18 +161,141 @@ impl TreeTrait for Tree {
             length: 1,
         }
     }
+
+    // 节点的新增
     fn insert(self: &mut Tree, value: i32) -> Result<i32, String> {
-        todo!()
+        let root = Tree::get_rc(&self.root);
+        let mut current_node = root;
+        // 声明一个临时变量，用于赋值给 current_node
+        let mut current_node_tmp: Option<Rc<RefCell<TreeNode>>>;
+        // 使用新的值实例化新的节点
+        let new_node = Some(Rc::new(RefCell::new(TreeNode::new(value))));
+        loop {
+            match current_node {
+                Some(ref node_rf) => {
+                    let mut node_tr = node_rf.borrow_mut();
+                    let new_node_val = if let Some(ref new_node_rf) = new_node {
+                        let new_node_tr = (&new_node_rf).borrow();
+                        new_node_tr.val
+                    } else {
+                        return Err("the TreeNode's value is invalid...".to_string());
+                    };
+                    if new_node_val > node_tr.val {
+                        if node_tr.right == None {
+                            node_tr.right = new_node;
+                            return Ok(1);
+                        } else {
+                            // 获取 right 值的 rc 引用
+                            current_node_tmp = Tree::get_rc(&(node_tr.right));
+                        }
+                    } else {
+                        if node_tr.left == None {
+                            node_tr.left = new_node;
+                            return Ok(1);
+                        } else {
+                            // 获取 right 值的 rc 引用
+                            current_node_tmp = Tree::get_rc(&(node_tr.left));
+                        }
+                    }
+                }
+                _ => {
+                    return Err("insert error".to_string());
+                },
+            }
+            current_node = current_node_tmp;
+        }
     }
+
     fn delete(self: &mut Self, value: i32) -> Result<i32, String> {
         todo!()
     }
-    
+
+    fn search(self: &mut Self, value: i32) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut current_node = Tree::get_rc(&self.root);
+        let needle_node = Some(Rc::new(RefCell::new(TreeNode::new(value))));
+        let needle_val = Tree::get_val(&needle_node);
+        loop {
+            let current_val = Tree::get_val(&current_node);
+            if current_val == needle_val {
+                return current_node;
+            } else {
+                // 比它小，则从左子树查找，否则从右子树查找
+                if needle_val > current_val {
+                    current_node = Tree::get_rc(&current_node.unwrap().borrow().right);
+                } else {
+                    current_node = Tree::get_rc(&current_node.unwrap().borrow().left);
+                }
+            }
+            if current_node == None {
+                break;
+            }
+        }
+        return None;
+    }
+}
+
+impl Tree {
+    fn get_rc(rc_rc: &Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if let Some(ref new_node_rf) = *rc_rc {
+            let new_rc = Rc::clone(new_node_rf);
+            Some(new_rc)
+        } else {
+            None
+        }
+    }
+
+    fn is_equal(left_node: &Option<Rc<RefCell<TreeNode>>>, right_node: &Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let l = Tree::get_rc(left_node);
+        let r = Tree::get_rc(right_node);
+        return l.unwrap().borrow().val == r.unwrap().borrow().val;
+    }
+
+    fn get_val(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let rc = Tree::get_rc(node);
+        return rc.unwrap().borrow().val;
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_search() {
+        let mut tree = Tree::new(3);
+        let arr = vec![9,6,10,11,5];
+        for val in arr {
+            match tree.insert(val) {
+                Ok(code) => assert_eq!(1, code),
+                Err(msg) => {
+                    println!("{:?}", msg);
+                    assert!(false);
+                }
+            }
+        }
+        let needle = tree.search(10);
+        assert_eq!(10, needle.unwrap().borrow().val);
+    }
+
+    #[test]
+    fn test_insert() {
+        let mut tree = Tree::new(3);
+        if let Ok(code) = tree.insert(4) {
+            assert_eq!(1, code);
+        } else {
+            panic!("insert error")
+        }
+        let arr = vec![9,6,10,11,5];
+        for val in arr {
+            match tree.insert(val) {
+                Ok(code) => assert_eq!(1, code),
+                Err(msg) => {
+                    println!("{:?}", msg);
+                    assert!(false);
+                }
+            }
+        }
+    }
 
     #[test]
     fn test_tree_new() {
