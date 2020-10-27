@@ -7,6 +7,10 @@ struct Solution;
 
 impl Solution {
     pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        let mut returnString = String::new();
+        if strs.len() < 1 {
+            return returnString;
+        }
         let sample_str = strs.get(0).unwrap();
         let mut sample_str_bytes = sample_str.as_bytes();
         for index in 1.. strs.len() {
@@ -22,7 +26,7 @@ impl Solution {
             }
             sample_str_bytes = &sample_str_bytes[0..cmp_index];
             if sample_str_bytes.len() <= 0 {
-                return String::from_utf8_lossy(sample_str_bytes).to_string();
+                break;
             }
         }
         String::from_utf8_lossy(sample_str_bytes).to_string()
