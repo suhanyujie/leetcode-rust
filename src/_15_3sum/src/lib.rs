@@ -26,14 +26,38 @@
 */
 struct Solution;
 
-
 impl Solution {
+    // 排序 + 双指针
+    // 参考写法 https://blog.csdn.net/starflyyy/article/details/106955473 
     pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut num_arr = nums;
+        let mut result: Vec<Vec<i32>> = vec![];
+        // 先排序
+        num_arr.sort();
+        for i in 0..num_arr.len() {
+            if num_arr[i] > 0 {
+                break;
+            }
+            let target = -1 * &num_arr[i];
+            let mut left = i + 1;
+            let mut right = num_arr.len() - 1;
+            while left < right {
+                if num_arr[left] + num_arr[right] == target {
+                    result.push(vec![target, num_arr[left], num_arr[right]]);
+                    left += 1;
+                    right -= 1;
+                    while left < right && num_arr[left] == num_arr[left - 1] {left += 1;}
+                    while left < right && num_arr[right] == num_arr[right + 1] {right -= 1;}
+                } else if num_arr[left] + num_arr[right] > target {
+                    right -= 1;
+                } else {
+                    left += 1;
+                }
+            }
+        }
+        println!("{:?}", result);
 
-
-        vec![
-            vec![1,2,3]
-        ]
+        result
     }
 
     // 统计 1 的个数
@@ -46,7 +70,7 @@ impl Solution {
         }
         loop {
             n1 = n1 >> 1;
-            if n1 <= 0{
+            if n1 <= 0 {
                 break;
             }
             if n1 & 1 == 1 {
@@ -64,11 +88,10 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let input = vec![1,2,3];
-        let expect = vec![
-            vec![1,2,3]
-        ];
+        let input = vec![11, 2, -3, -7, 10, -9, 8, -6, -1, 0, -4, 5];
+        let expect = vec![vec![1, 2, 3]];
         assert_eq!(expect, Solution::three_sum(input));
+        assert!(false);
     }
 
     #[test]
