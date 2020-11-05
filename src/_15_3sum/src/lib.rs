@@ -28,7 +28,8 @@ struct Solution;
 
 impl Solution {
     // 排序 + 双指针
-    // 参考写法 https://blog.csdn.net/starflyyy/article/details/106955473 
+    // 参考写法 https://blog.csdn.net/starflyyy/article/details/106955473
+    // 尝试其他解法 todo
     pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
         let mut num_arr = nums;
         let mut result: Vec<Vec<i32>> = vec![];
@@ -38,16 +39,24 @@ impl Solution {
             if num_arr[i] > 0 {
                 break;
             }
+            // 过滤重复的情况
+            if i > 0 && num_arr[i] == num_arr[i - 1] {
+                continue;
+            }
             let target = -1 * &num_arr[i];
             let mut left = i + 1;
             let mut right = num_arr.len() - 1;
             while left < right {
                 if num_arr[left] + num_arr[right] == target {
-                    result.push(vec![target, num_arr[left], num_arr[right]]);
+                    result.push(vec![num_arr[i], num_arr[left], num_arr[right]]);
                     left += 1;
                     right -= 1;
-                    while left < right && num_arr[left] == num_arr[left - 1] {left += 1;}
-                    while left < right && num_arr[right] == num_arr[right + 1] {right -= 1;}
+                    while left < right && num_arr[left] == num_arr[left - 1] {
+                        left += 1;
+                    }
+                    while left < right && num_arr[right] == num_arr[right + 1] {
+                        right -= 1;
+                    }
                 } else if num_arr[left] + num_arr[right] > target {
                     right -= 1;
                 } else {
@@ -55,7 +64,6 @@ impl Solution {
                 }
             }
         }
-        println!("{:?}", result);
 
         result
     }
@@ -88,9 +96,19 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let input = vec![11, 2, -3, -7, 10, -9, 8, -6, -1, 0, -4, 5];
-        let expect = vec![vec![1, 2, 3]];
-        assert_eq!(expect, Solution::three_sum(input));
+        // let input = vec![11, 2, -3, -7, 10, -9, 8, -6, -1, 0, -4, 5];
+        // let expect = vec![
+        //     vec![-9, -1, 10],
+        //     vec![-7, -4, 11],
+        //     vec![-7, -3, 10],
+        //     vec![-7, -1, 8],
+        //     vec![-7, 2, 5],
+        //     vec![-6, -4, 10],
+        //     vec![-4, -1, 5],
+        // ];
+        // assert_eq!(expect, Solution::three_sum(input));
+        let expect = vec![vec![0, 0, 0]];
+        assert_eq!(expect, Solution::three_sum(vec![0, 0, 0, 0]));
         assert!(false);
     }
 
