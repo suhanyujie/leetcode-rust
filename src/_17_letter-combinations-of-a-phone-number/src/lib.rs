@@ -9,8 +9,18 @@ impl Solution {
     pub fn letter_combinations(digits: String) -> Vec<String> {
         let len1 = digits.len();
         let letter_map = Solution::get_letter_map();
-        // digits.chars().enumerate().fold("", |acc, (_index, letter)| {
+        let bytes1 = digits.as_bytes();
+        for i in bytes1 {
+            let arr1 = letter_map.get(&(*i as char));
+            if arr1 == None {
+                panic!("invalid number. ");
+            }
+            let arr1 = arr1.unwrap();
+            
+        }
 
+        // digits.chars().enumerate().fold("", |acc, (_index, letter)| {
+        //     acc + letter.to_string()
         // });
         vec!["".to_owned()]
     }
