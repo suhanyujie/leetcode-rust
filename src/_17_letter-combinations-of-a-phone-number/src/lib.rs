@@ -11,11 +11,7 @@ impl Solution {
         let letter_map = Solution::get_letter_map();
         let bytes1 = digits.as_bytes();
         for i in bytes1 {
-            let arr1 = letter_map.get(&(*i as char));
-            if arr1 == None {
-                panic!("invalid number. ");
-            }
-            let arr1 = arr1.unwrap();
+            let arr1 = Solution::get_ref_arr(i);
             
         }
 
@@ -23,6 +19,16 @@ impl Solution {
         //     acc + letter.to_string()
         // });
         vec!["".to_owned()]
+    }
+
+    fn get_ref_arr(c: &u8) -> Vec<&str> {
+        let letter_map = Solution::get_letter_map();
+        let arr1 = letter_map.get(&(*c as char));
+        if arr1 == None {
+            panic!("invalid number. ");
+        }
+        let arr1 = arr1.unwrap();
+        return arr1.clone();
     }
 
     fn get_letter_map() -> HashMap<char, Vec<&'static str>> {
