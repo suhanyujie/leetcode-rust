@@ -10,7 +10,29 @@ impl Solution {
     # Rust 字符串的拼接
 
     */
-    pub fn letter_combinations(tmp_str: String, digits: String) -> Vec<String> {
+    pub fn letter_combinations(digits: String) -> Vec<String> {
+        let len1 = digits.len();
+        if len1 == 0 {
+            return vec![];
+        }
+        let letter_map = Solution::get_letter_map();
+        let bytes1 = digits.as_bytes();
+        let mut res: Vec<String> = Solution::one_letter_combinations("".to_string(), (bytes1[0] as char).to_string());
+        let remain_digit_str = digits[1..].to_string();
+        if remain_digit_str.len() == 0 {
+            return res;
+        }
+        let mut res2: Vec<String> = vec![];
+        for one_res in res {
+            let part_res = Solution::one_letter_combinations(one_res, remain_digit_str.clone());
+            // 数组的合并
+            res2 = [res2, part_res].concat();
+        }
+
+        return res2;
+    }
+
+    pub fn one_letter_combinations(tmp_str: String, digits: String) -> Vec<String> {
         let len1 = digits.len();
         if len1 == 0 {
             return vec![tmp_str];
@@ -26,14 +48,7 @@ impl Solution {
         if digits.len() == 0 {
             return res;
         }
-        let mut res2: Vec<String> = vec![];
-        for one_res in res {
-            let part_res = Solution::letter_combinations(one_res, digits[1..].to_string());
-            // 数组的合并
-            res2 = [res2, part_res].concat();
-        }
-
-        return res2;
+        return res;
     }
 
     fn get_ref_arr(c: &u8) -> Vec<&str> {
@@ -68,7 +83,7 @@ mod tests {
     #[test]
     fn it_works() {
         assert_eq!(
-            Solution::letter_combinations("".to_string(), "23".to_string()), 
+            Solution::letter_combinations("23".to_string()), 
             vec!["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"]
         );
     }
