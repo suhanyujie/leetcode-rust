@@ -42,7 +42,7 @@ impl Solution {
                 continue;
             }
             for b in a + 1..arr.len() {
-                if b > 0 && arr[b] == arr[b - 1] {
+                if b > a + 1 && arr[b] == arr[b - 1] {
                     continue;
                 }
                 let mut left = b + 1;
@@ -79,9 +79,9 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let expect_val = vec![vec![-2, -1, 1, 2],vec![-2, 0, 0, 2], vec![-1, 0, 0, 1],];
-        assert_eq!(expect_val, Solution::four_sum(vec![1, 0, -1, 0, -2, 2], 0));
         let expect_val = vec![vec![0, 0, 0, 0],];
         assert_eq!(expect_val, Solution::four_sum(vec![0, 0, 0, 0], 0));
+        let expect_val = vec![vec![-2, -1, 1, 2],vec![-2, 0, 0, 2], vec![-1, 0, 0, 1],];
+        assert_eq!(expect_val, Solution::four_sum(vec![1, 0, -1, 0, -2, 2], 0));
     }
 }
