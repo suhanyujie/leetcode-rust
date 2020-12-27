@@ -44,20 +44,29 @@ struct Solution;
 */
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
-        let dp: Vec<i32> = vec![];
-        dp[0] = 1;
-        dp[1] = 1;
-        for i in 2..=n {
-            dp[n] = dp[i-1] + dp[i-2];
+        // n 为0、1 时的值是 1。
+        let mut dp: Vec<i32> = vec![1, 1];
+        if n < 2 {
+            return dp[n as usize];
         }
-        return dp[n];
+        for i in 2..=n {
+            let cur_index = i as usize; 
+            let value = dp[cur_index-1] + dp[cur_index-2];
+            dp.push(value);
+        }
+        return dp[n as usize];
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn it_works() {
-        assert_eq!(2 + 2, 4);
+        assert_eq!(Solution::climb_stairs(0), 1);
+        assert_eq!(Solution::climb_stairs(1), 1);
+        assert_eq!(Solution::climb_stairs(2), 2);
+        assert_eq!(Solution::climb_stairs(3), 3);
     }
 }
