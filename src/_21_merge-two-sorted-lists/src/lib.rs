@@ -23,7 +23,11 @@ struct Solution;
 impl<'a> Solution {
     /// tips：取节点，到一个数组中，对数组进行排序，然后重新建立链表。
     pub fn merge_two_lists(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-
+      let mut list1 = Self::get_node_list(&l1);
+      let mut list2 = Self::get_node_list(&l2);
+      list1.append(&mut list2);
+      list1.sort_by(|a, b| a.as_ref().unwrap().val.cmp(&b.as_ref().unwrap().val));
+      dbg!(list1);
       return l1;
     }
 
@@ -46,5 +50,17 @@ mod tests {
     #[test]
     fn test_get_node_list() {
         assert_eq!(Solution::get_node_list(&None).len(), 0);
+    }
+
+    #[test]
+    fn test_merge_two_lists() {
+      let n1 = Some(Box::new(ListNode::new(5)));
+      let v_n5 = Box::new(ListNode{
+        val: 6,
+        next: n1,
+      });
+      let n4 = Some(v_n5);
+      Solution::merge_two_lists(n4, None);
+      assert!(false);
     }
 }
