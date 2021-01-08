@@ -30,11 +30,11 @@ impl Solution {
     }
 
     pub fn is_left(c: char) ->bool {
-        return vec!["(", "{", "["].contains(c);
+        return vec!['(', '{', '['].contains(&c);
     }
 
     pub fn is_right(c: char) ->bool {
-        return vec![")", "}", "]"].contains(c);
+        return vec![')', '}', ']'].contains(&c);
     }
 }
 
