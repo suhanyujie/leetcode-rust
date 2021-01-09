@@ -30,7 +30,7 @@ impl Solution {
         let mut stack: Vec<char> = vec![];
         let str_map = Self::get_str_pair();
         let res = s.chars().find_map(|c| {
-            if Self::is_left(c) {
+            if str_map.contains_key(&c) {
                 stack.push(c);
             } else {
                 let pop_val = stack.pop();
@@ -41,7 +41,7 @@ impl Solution {
                 //println!("cur char is: {}, matched char is: {:?}, poped val: {:?}", c, matched_char, pop_val);
                 if matched_char.is_none() {
                     return Some(true);
-                }
+                 }
                 if matched_char.unwrap().ne(&c) {
                     return Some(true);
                 }
@@ -61,14 +61,6 @@ impl Solution {
         m.insert('[', ']');
         m.insert('{', '}');
         return m;
-    }
-
-    pub fn is_left(c: char) -> bool {
-        return vec!['(', '{', '['].contains(&c);
-    }
-
-    pub fn is_right(c: char) -> bool {
-        return vec![')', '}', ']'].contains(&c);
     }
 }
 
