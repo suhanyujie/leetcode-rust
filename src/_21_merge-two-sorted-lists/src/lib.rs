@@ -22,27 +22,36 @@ struct Solution;
 
 impl<'a> Solution {
     /// tips：取节点，到一个数组中，对数组进行排序，然后重新建立链表。
+    /// 通过查阅题解，先以递归的方式实现：
+    /// 结果链表的头节点，两个链表位置的临时指针。
     pub fn merge_two_lists(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-      let mut list1 = Self::get_node_list(l1);
-      let mut list2 = Self::get_node_list(l2);
-      list1.append(&mut list2);
-      list1.sort_by(|a, b| a.as_ref().unwrap().val.cmp(&b.as_ref().unwrap().val));
-      // 重新组装链表
-
-      dbg!(&list1);
-      return None;
+      match  (l1, l2) {
+        (None, None) => None,
+        (Some(b1), None) => Some(b1),
+        (None, Some(b2)) => Some(b2),
+        (Some(mut b1), Some(mut b2)) => {
+          if b1.as_ref().val < b2.as_ref().val {
+            b1.next = Self::merge_two_lists(b1.next, Some(b2));
+            Some(b1)
+          } else {
+            b2.next = Self::merge_two_lists(Some(b1), b2.next);
+            Some(b2)
+          }
+        },
+      }
     }
 
+    // todo 通过数组，生成新的链表。
     pub fn gen_list(arr: Vec<Option<Box<ListNode>>>) {
       
-      let mut cur_node = None;
-      for i in 0..arr.len() {
-        if i > 0 {
-          // cur_node.unwrap().next = (arr[i]).take();
-        } else {
-          cur_node = arr[0];
-        }
-      }
+      // let mut cur_node = None;
+      // for i in 0..arr.len() {
+      //   if i > 0 {
+      //     // cur_node.unwrap().next = (arr[i]).take();
+      //   } else {
+      //     cur_node = arr[0];
+      //   }
+      // }
     }
 
     /// 获取一个链表的所有节点
