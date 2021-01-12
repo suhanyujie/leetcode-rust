@@ -41,9 +41,31 @@ impl<'a> Solution {
       }
     }
 
+    // 非递归方式
+    // 参考 https://leetcode-cn.com/problems/merge-two-sorted-lists/solution/rust-fei-di-gui-geng-jian-dan-cao-zuo-wu-mo-shi-pi/
+    pub fn merge_two_lists_2(mut l1: Option<Box<ListNode>>, mut l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+      // 声明结果链表的头节点
+      let mut tail = ListNode::new(1);
+      let mut p_tail = &mut tail;
+      while l1.is_some() && l2.is_some() {
+        let (p1, p2) = (l1.as_mut().unwrap(), l2.as_mut().unwrap());
+        if p1.val < p2.val {
+          let next = p1.next.take();
+          p_tail.next = l1.take();
+          l1 = next;
+        } else {
+          let next = p2.next.take();
+          p_tail.next = l2.take();
+          l2 = next;
+        }
+        p_tail = p_tail.next.as_mut().unwrap();
+      }
+      p_tail.next = l1.or(l2);
+      tail.next
+    }
+
     // todo 通过数组，生成新的链表。
     pub fn gen_list(arr: Vec<Option<Box<ListNode>>>) {
-      
       // let mut cur_node = None;
       // for i in 0..arr.len() {
       //   if i > 0 {
