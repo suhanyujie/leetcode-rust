@@ -18,6 +18,7 @@ impl ListNode {
 
 impl Solution {
     /// 使用一个指针作为结果指针，然后挨个对比链表的首节点。
+    /// 查看题解后，采用分治合并：https://leetcode-cn.com/problems/merge-k-sorted-lists/solution/he-bing-kge-pai-xu-lian-biao-by-leetcode-solutio-2/
     pub fn merge_k_lists(lists: Vec<Option<Box<ListNode>>>) -> Option<Box<ListNode>> {
         let tail = Some(ListNode::new(-1 * 10000));
         let mut cur_node = &tail;
@@ -31,6 +32,14 @@ impl Solution {
         }
 
         return None;
+    }
+
+    pub fn merge(lists: Vec<Option<Box<ListNode>>>, l: usize, r: usize) -> Option<Box<ListNode>> {
+        
+    }
+
+    pub fn merge_two(list1: Vec<Option<Box<ListNode>>>, list2: Vec<Option<Box<ListNode>>>) ->Option<Box<ListNode>> {
+
     }
 }
 
