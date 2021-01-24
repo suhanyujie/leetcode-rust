@@ -2,8 +2,7 @@
 * 使用 Rust 实现一些算法题
 
 ## index
-* 是否回文数 [_6_palindrome-number](src/_6_palindrome-number)
-* 正则表达式匹配 [_7_regular-expression-matching](src/_7_regular-expression-matching)
+* 已做[列表](./src)
 
 ## 新建算法解题
 * `cargo new _7_some-algo --lib`
@@ -11,3 +10,4 @@
 
 ## reference
 * 算法练习 https://exercism.io/
+* 力扣 https://leetcode-cn.com/problemset/all/
