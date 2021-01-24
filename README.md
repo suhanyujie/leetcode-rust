@@ -4,8 +4,8 @@
 ## index
 * 已做[列表](./src)
 
-## 新建算法解题
-* `cargo new _7_some-algo --lib`
+## 新建解题
+* 在 src 下新建：`cargo new --lib {algoName}` 例如：`cargo new --lib _7_some-algo`
 * 运行测试用例，进入该算法目录，使用命令 `cargo t`
 
 ## reference
