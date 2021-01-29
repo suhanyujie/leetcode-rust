@@ -31,13 +31,21 @@ impl ListNode {
 
 impl Solution {
     pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        let mut tail = head;
-        let mut new_tail = tail.take();
-        Self::swap_pairs(tail.as_mut().unwrap().next);
-        None
-    }
+        let mut old_head = head;
+        if old_head.is_none() || old_head.as_ref().unwrap().next.is_none() {
+            return old_head;
+        }
+        let mut old_tail = old_head.as_mut().unwrap().next.take();
+        let mut next_head = old_tail.as_mut().unwrap().next.take();
+        let mut next = None;
+        if next_head.is_some() {
+            next = Self::swap_pairs(next_head);
+        }
+        old_head.as_mut().unwrap().next = next;
+        old_tail.as_mut().unwrap().next = old_head;
 
-    pub fn swap_two(one: Option<Box<ListNode>>, two: &Option<Box<ListNode>>) {}
+        old_tail
+    }
 }
 
 #[cfg(test)]
