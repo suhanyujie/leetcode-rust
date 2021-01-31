@@ -34,8 +34,57 @@ impl ListNode {
 }
 
 impl Solution {
+    // 遍历一遍，取得节点的数量，计算需要进行多少次反转。
     pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
-        None
+        if k <= 1 {
+            return head;
+        }
+        if head.is_none() {
+            return head;
+        }
+        if head.as_ref().is_some() && head.as_ref().as_ref().unwrap().next.is_none() {
+            return head;
+        }
+        // 统计链表数量
+        let node_num = Self::get_node_num(&head);
+        if k > node_num {
+            return head;
+        }
+        let mut list: Vec<Option<Box<ListNode>>> = vec![];
+        let mut cur_node = head;
+        let mut index = 0;
+        while cur_node.is_some() {
+            if index > k {
+                break;
+            }
+            let next = cur_node.as_mut().unwrap().next.take();
+            list.push(cur_node.take());
+            cur_node = next;
+            index += 1;
+        }
+        let mut new_tail = Some(Box::new(ListNode::new(0)));
+        let mut cur_node = &mut new_tail;
+        for item in list {
+            let next = item.take();
+            cur_node.as_mut().unwrap().next = item;
+            cur_node = &mut next;
+        }
+        // cur_node.as_mut().unwrap().next = Self::reverse_k_group();
+
+        new_tail.unwrap().next
+    }
+
+    pub fn get_node_num(head: &Option<Box<ListNode>>) -> i32 {
+        let mut num = 0;
+        if head.is_none() {
+            return num;
+        }
+        let mut cur_node = head;
+        while cur_node.is_some() {
+            num += 1;
+            cur_node = &cur_node.as_ref().unwrap().next;
+        }
+        num
     }
 }
 
