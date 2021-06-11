@@ -14,11 +14,11 @@ impl Solution {
         let mut v_dp = vec![vec![0; l2 + 1]; l1 + 1];
         // 初始化每一列第一行的值，除了第一个
         for col in 0..=l2 {
-            v_dp[col][0] = col as i32;
+            v_dp[0][col] = col as i32;
         }
         // 初始化每一行第一列的值的值，除了第一个
         for row in 0..=l1 {
-            v_dp[0][row] = row as i32;
+            v_dp[row][0] = row as i32;
         }
         let c1_arr: Vec<char> = word1.chars().collect();
         let c2_arr: Vec<char> = word2.chars().collect();
