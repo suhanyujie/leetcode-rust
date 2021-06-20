@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 
 struct Trie {
-    root: Option<Box<Node>>,
+    root: HashMap<char, Option<Box<Vec<Node>>>>,
 }
 
 struct Node {
@@ -19,20 +19,29 @@ struct Node {
 impl Trie {
     /** Initialize your data structure here. */
     fn new() -> Self {
-        Trie { root: None }
+        let m: HashMap<char, Option<Box<Vec<Node>>>> = HashMap::new();
+        Trie { root: m }
     }
 
     /** Inserts a word into the trie. */
     fn insert(&self, word: String) {
         let root = &self.root;
         let word_list: Vec<char> = word.chars().collect();
-        if root.is_none() {
-            self.insert_char(c);
-        } else {
+        let mut cur_node = root;
+        for c in &word_list {
+            let tmp_node = cur_node.get(c);
+            if tmp_node.is_none() {
+                cur_node[c] = Self::insert_char(&mut cur_node, &word_list[1..=word_list.len()])
+            }
         }
     }
 
-    fn insert_char(node: &Node, c: char) {}
+    fn insert_char(
+        node: &mut HashMap<char, Option<Box<Vec<Node>>>>,
+        c: &[char],
+    ) -> Option<Box<Vec<Node>>> {
+        None
+    }
 
     /** Returns if the word is in the trie. */
     fn search(&self, word: String) -> bool {}
