@@ -3,8 +3,13 @@
 
 use std::collections::HashMap;
 
+/// 一开始的想法是使用 HashMap，可是将数据节点包装成 HashMap<char, Option<Box<Vec<Node>>>> 处理起来会比较繁琐，
+/// 所以打算看一下[题解](https://leetcode-cn.com/problems/implement-trie-prefix-tree/solution/rust-shi-xian-qian-zhui-shu-trie-by-dxmq-e4xl/)，找找其他思路。
+/// 按照题解中的解法有局限性，字符串中只允许 a-zA-Z，而不允许其他字符串出现。
+#[derive(Default)]
 struct Trie {
-    root: HashMap<char, Option<Box<Vec<Node>>>>,
+    child: [Option<Box<Trie>>; 26],
+    is_end: bool,
 }
 
 struct Node {
@@ -19,35 +24,47 @@ struct Node {
 impl Trie {
     /** Initialize your data structure here. */
     fn new() -> Self {
-        let m: HashMap<char, Option<Box<Vec<Node>>>> = HashMap::new();
-        Trie { root: m }
+        Default::default()
     }
 
     /** Inserts a word into the trie. */
-    fn insert(&self, word: String) {
-        let root = &self.root;
-        let word_list: Vec<char> = word.chars().collect();
-        let mut cur_node = root;
-        for c in &word_list {
-            let tmp_node = cur_node.get(c);
-            if tmp_node.is_none() {
-                cur_node[c] = Self::insert_char(&mut cur_node, &word_list[1..=word_list.len()])
-            }
+    fn insert(&mut self, word: String) {
+        let mut cur = self;
+        for i in word.chars().map(|c| {
+            let v1 = c as u8 - 'a' as u8;
+            println!("{}", v1);
+            v1 as usize
+        }) {
+            cur = cur.child[i].get_or_insert_with(|| Box::new(Trie::new()));
         }
-    }
-
-    fn insert_char(
-        node: &mut HashMap<char, Option<Box<Vec<Node>>>>,
-        c: &[char],
-    ) -> Option<Box<Vec<Node>>> {
-        None
+        cur.is_end = true;
     }
 
     /** Returns if the word is in the trie. */
-    fn search(&self, word: String) -> bool {}
+    fn search(&self, word: String) -> bool {
+        let mut cur = self;
+        for i in word.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+            let res = cur.child[i].as_ref();
+            match res {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        cur.is_end
+    }
 
     /** Returns if there is any word in the trie that starts with the given prefix. */
-    fn starts_with(&self, prefix: String) -> bool {}
+    fn starts_with(&self, prefix: String) -> bool {
+        let mut cur = self;
+        for i in prefix.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+            let res = cur.child[i].as_ref();
+            match res {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        true
+    }
 }
 
 /**
@@ -64,10 +81,20 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let word = "hello world".into();
-        let obj = Trie::new();
+        let word = "hellowworld".into();
+        let mut obj = Trie::default();
         obj.insert(word);
-        let ret_2: bool = obj.search(word);
-        let ret_3: bool = obj.starts_with("hell".into());
+        assert_eq!(obj.starts_with("hello".into()), true);
+        assert_eq!(obj.starts_with("hellow".into()), true);
+        assert_eq!(obj.starts_with("hellowa".into()), false);
+    }
+
+    #[test]
+    fn test_str1() {
+        let s1: String = "hello".into();
+        let b1: Vec<char> = s1.chars().collect();
+        let mut d1 = Some(Box::new('h'));
+        let d2 = d1.get_or_insert_with(|| Box::new('a'));
+        println!("{:?}", d2);
     }
 }
