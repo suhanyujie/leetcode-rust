@@ -12,9 +12,17 @@ struct Trie {
     is_end: bool,
 }
 
+/// TriePlus 是我在 Trie 结构的基础上的进一步实现，由于 Trie 只支持 ASCII 字符，而不支持其他字符
+/// 因此，TriePlus 是 Trie 的改进版。
+#[derive(Default)]
+struct TriePlus {
+    entry: HashMap<char, Option<Box<Vec<Node>>>>,
+}
+
 struct Node {
     c: char,
     children: Option<Box<Vec<Node>>>,
+    is_end: bool,
 }
 
 /**
@@ -74,6 +82,56 @@ impl Trie {
  * let ret_2: bool = obj.search(word);
  * let ret_3: bool = obj.starts_with(prefix);
  */
+
+impl TriePlus {
+    /** Initialize your data structure here. */
+    fn new() -> Self {
+        Default::default()
+    }
+
+    /** Inserts a word into the trie. */
+    fn insert(&mut self, word: String) {
+        // let mut cur = self;
+        // for i in word.chars().map(|c| {
+        //     let v1 = c as u8 - 'a' as u8;
+        //     println!("{}", v1);
+        //     v1 as usize
+        // }) {
+        //     cur = cur.child[i].get_or_insert_with(|| Box::new(Trie::new()));
+        // }
+        // cur.is_end = true;
+        let mut cur = self;
+        for c in word.chars().map(|c| c) {
+            cur.char
+        }
+    }
+
+    /** Returns if the word is in the trie. */
+    fn search(&self, word: String) -> bool {
+        let mut cur = self;
+        for i in word.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+            let res = cur.child[i].as_ref();
+            match res {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        cur.is_end
+    }
+
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    fn starts_with(&self, prefix: String) -> bool {
+        let mut cur = self;
+        for i in prefix.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+            let res = cur.child[i].as_ref();
+            match res {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        true
+    }
+}
 
 #[cfg(test)]
 mod tests {
