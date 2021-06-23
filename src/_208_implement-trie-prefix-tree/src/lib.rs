@@ -19,10 +19,17 @@ struct TriePlus {
     entry: HashMap<char, Option<Box<Vec<Node>>>>,
 }
 
+#[derive(PartialEq, Eq)]
 struct Node {
     c: char,
     children: Option<Box<Vec<Node>>>,
     is_end: bool,
+}
+
+impl Node {
+    fn child_contains(&mut self, c: &char) -> bool {
+        true
+    }
 }
 
 /**
@@ -89,7 +96,7 @@ impl TriePlus {
         Default::default()
     }
 
-    /** Inserts a word into the trie. */
+    // 新增单词。可能需要参考 too-many-lists https://rust-unofficial.github.io/too-many-lists/second-final.html 才能更好地实现。
     fn insert(&mut self, word: String) {
         // let mut cur = self;
         // for i in word.chars().map(|c| {
@@ -100,35 +107,49 @@ impl TriePlus {
         //     cur = cur.child[i].get_or_insert_with(|| Box::new(Trie::new()));
         // }
         // cur.is_end = true;
-        let mut cur = self;
+
         for c in word.chars().map(|c| c) {
-            cur.char
+            if self.entry.get(&c).is_none() {
+                // Option<Box<Vec<Node>>>
+                let new_hs: HashMap<char, Option<Box<Vec<Node>>>> = HashMap::new();
+            } else {
+            }
+        }
+    }
+
+    // 向一个节点（从该节点开始）插入一个字符串 todo
+    fn insert_node(node: &mut Node, byte: &[char]) {
+        let mut cur_node = node;
+        for cur_ch in byte.iter().map(|c| c) {
+            let tmp_list = cur_node.children.as_ref().unwrap();
+            if cur_node.child_contains(cur_ch) {}
         }
     }
 
     /** Returns if the word is in the trie. */
     fn search(&self, word: String) -> bool {
-        let mut cur = self;
-        for i in word.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
-            let res = cur.child[i].as_ref();
-            match res {
-                Some(node) => cur = node,
-                None => return false,
-            }
-        }
-        cur.is_end
+        // let mut cur = self;
+        // for i in word.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+        //     let res = cur.child[i].as_ref();
+        //     match res {
+        //         Some(node) => cur = node,
+        //         None => return false,
+        //     }
+        // }
+        // cur.is_end
+        false
     }
 
     /** Returns if there is any word in the trie that starts with the given prefix. */
     fn starts_with(&self, prefix: String) -> bool {
-        let mut cur = self;
-        for i in prefix.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
-            let res = cur.child[i].as_ref();
-            match res {
-                Some(node) => cur = node,
-                None => return false,
-            }
-        }
+        // let mut cur = self;
+        // for i in prefix.chars().map(|c| (c as u8 - 'a' as u8) as usize) {
+        //     let res = cur.child[i].as_ref();
+        //     match res {
+        //         Some(node) => cur = node,
+        //         None => return false,
+        //     }
+        // }
         true
     }
 }
