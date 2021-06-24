@@ -147,6 +147,14 @@ mod tests {
         assert_eq!(obj.starts_with("hellow".into()), true);
         assert_eq!(obj.starts_with("hellow-".into()), true);
         assert_eq!(obj.starts_with("hellowa".into()), false);
+        obj.insert("你是谁".into());
+        obj.insert("你是我".into());
+        obj.insert("你是他".into());
+        obj.insert("你是她".into());
+        obj.insert("你是它".into());
+        assert_eq!(obj.starts_with("你是".into()), true);
+        assert_eq!(obj.search("你是".into()), false);
+        assert_eq!(obj.search("你是它".into()), true);
     }
 
     #[test]
