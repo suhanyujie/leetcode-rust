@@ -4,6 +4,10 @@
 ## index
 * 已做[列表](./src)
 
+|#| 标题 | 解题 | 难度 |
+|:-----  |:-----|:----- |:----- |
+| 1 | 两数之和 | Rust  | 简单 |
+
 ## 新建解题
 * 在 src 下新建：`cargo new --lib {algoName}` 例如：`cargo new --lib _7_some-algo`
 * 运行测试用例，进入该算法目录，使用命令 `cargo t`
