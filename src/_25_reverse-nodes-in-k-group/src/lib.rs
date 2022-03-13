@@ -36,7 +36,6 @@ impl ListNode {
 }
 
 impl Solution {
-    // 遍历一遍，取得节点的数量，计算需要进行多少次反转。
     pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
         if k <= 1 {
             return head;
@@ -48,12 +47,12 @@ impl Solution {
             return head;
         }
         let total = Solution::get_node_num(&head);
+        // 用一个新的节点放置反转后的链表 head
         let mut new_head = Some(Box::new(ListNode::new(0)));
         let mut new_tail = new_head.as_mut().unwrap();
-        // 步进 k 次，然后 take
-        // let mut remain = head;
         for _ in 0..(total / k) {
             let mut p = head.as_mut().unwrap();
+            // 步进 k 次，然后 take
             for _ in 0..(k - 1) {
                 p = p.next.as_mut().unwrap();
             }
@@ -93,6 +92,7 @@ impl Solution {
         res
     }
 
+    /// 从头部开始，遍历计算出链表的长度
     pub fn get_node_num(head: &Option<Box<ListNode>>) -> i32 {
         let mut num = 0;
         if head.is_none() {
@@ -113,7 +113,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut node1 = Some(Box::new(ListNode::new(1)));
+        let node1 = Some(Box::new(ListNode::new(1)));
         let mut node2 = Some(Box::new(ListNode::new(2)));
         let mut node3 = Some(Box::new(ListNode::new(3)));
         let mut node4 = Some(Box::new(ListNode::new(4)));
@@ -123,6 +123,12 @@ mod tests {
         node4.as_mut().unwrap().next = node3;
         node5.as_mut().unwrap().next = node4;
         let res = Solution::reverse_k_group(node5, 2);
-        dbg!(res);
+        let expected_res = vec![4, 5, 2, 3, 1];
+        let mut cur_node_op = res;
+        for expected_one in expected_res {
+            let cur_node = cur_node_op.as_mut().unwrap();
+            assert!(cur_node.val == expected_one);
+            cur_node_op = cur_node.next.take();
+        }
     }
 }
