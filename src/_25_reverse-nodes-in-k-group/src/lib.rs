@@ -16,6 +16,8 @@ k 是一个正整数，它的值小于或等于链表的长度。
 
 当 k = 3 时，应当返回: 3->2->1->4->5
 
+节点的数量范围 sz: 1 <= sz <= 5000
+反转系数 1 <= k <= sz
 */
 struct Solution;
 
@@ -35,7 +37,7 @@ impl ListNode {
 
 impl Solution {
     // 遍历一遍，取得节点的数量，计算需要进行多少次反转。
-    pub fn reverse_k_group(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+    pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
         if k <= 1 {
             return head;
         }
@@ -45,33 +47,50 @@ impl Solution {
         if head.as_ref().is_some() && head.as_ref().as_ref().unwrap().next.is_none() {
             return head;
         }
-        // 统计链表数量
-        let node_num = Self::get_node_num(&head);
-        if k > node_num {
-            return head;
-        }
-        let mut list: Vec<Option<Box<ListNode>>> = vec![];
-        let mut cur_node = head;
-        let mut index = 0;
-        while cur_node.is_some() {
-            if index > k {
-                break;
+        let total = Solution::get_node_num(&head);
+        let mut new_head = Some(Box::new(ListNode::new(0)));
+        let mut new_tail = new_head.as_mut().unwrap();
+        // 步进 k 次，然后 take
+        // let mut remain = head;
+        for _ in 0..(total / k) {
+            let mut p = head.as_mut().unwrap();
+            for _ in 0..(k - 1) {
+                p = p.next.as_mut().unwrap();
             }
-            let next = cur_node.as_mut().unwrap().next.take();
-            list.push(cur_node.take());
-            cur_node = next;
-            index += 1;
+            let tail = p.next.take();
+            let reversed = Solution::reverse_one(head, k);
+            new_tail = Solution::merge_one(new_tail, reversed);
+            head = tail;
         }
-        let mut new_tail = Some(Box::new(ListNode::new(0)));
-        let mut cur_node = &mut new_tail;
-        for item in list {
-            let next = item.take();
-            cur_node.as_mut().unwrap().next = item;
-            cur_node = &mut next;
-        }
-        // cur_node.as_mut().unwrap().next = Self::reverse_k_group();
+        // 处理最后剩余不足 k 个的部分节点
+        new_tail.next = head;
 
-        new_tail.unwrap().next
+        new_head.unwrap().next
+    }
+
+    /// 将反转后的一组合并
+    fn merge_one(
+        mut tail: &mut Box<ListNode>,
+        new_list: Option<Box<ListNode>>,
+    ) -> &mut Box<ListNode> {
+        tail.next = new_list;
+        while tail.next.is_some() {
+            tail = tail.next.as_mut().unwrap();
+        }
+        tail
+    }
+
+    /// 反转一组
+    fn reverse_one(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut res: Option<Box<ListNode>> = None;
+        for _ in 0..k {
+            if let Some(mut tmp_node) = head {
+                head = tmp_node.next.take();
+                tmp_node.next = res;
+                res = Some(tmp_node);
+            }
+        }
+        res
     }
 
     pub fn get_node_num(head: &Option<Box<ListNode>>) -> i32 {
@@ -90,8 +109,20 @@ impl Solution {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn it_works() {
-        assert_eq!(2 + 2, 4);
+        let mut node1 = Some(Box::new(ListNode::new(1)));
+        let mut node2 = Some(Box::new(ListNode::new(2)));
+        let mut node3 = Some(Box::new(ListNode::new(3)));
+        let mut node4 = Some(Box::new(ListNode::new(4)));
+        let mut node5 = Some(Box::new(ListNode::new(5)));
+        node2.as_mut().unwrap().next = node1;
+        node3.as_mut().unwrap().next = node2;
+        node4.as_mut().unwrap().next = node3;
+        node5.as_mut().unwrap().next = node4;
+        let res = Solution::reverse_k_group(node5, 2);
+        dbg!(res);
     }
 }
