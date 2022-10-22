@@ -19,6 +19,7 @@ fn main() {
 struct Solution();
 
 impl Solution {
+    // 暴力解析法
     pub fn my_atoi(str: String) -> i32 {
         let str_bytes = str.trim().as_bytes();
         let mut num_arr: Vec<u8> = vec![];
@@ -72,9 +73,60 @@ impl Solution {
         res_int
     }
 
+    // 有限状态机方法
+    // https://leetcode.cn/problems/string-to-integer-atoi/solutions/184570/rust-you-xian-zhuang-tai-ji-yi-xing-zhu-shi-du-mei/?languageTags=rust
+    pub fn my_atoi2(str: String) -> i32 {
+        let str_r = &str[..];
+        let mut status = Status::StatusWait;
+        for n in str_r.as_bytes() {
+            status = match status {
+                Status::StatusWait => match n {
+                    b'-' => Status::StatusNega(0),
+                    b'+' => Status::StatusPosi(0),
+                    b'0'..=b'9' => Status::StatusPosi(Self::c2int(*n as char)),
+                    _ => Status::StatusEnd(0),
+                },
+                Status::StatusNega(cur_num) => {
+                    match n {
+                        b'0'..=b'9' => {
+                            // 与解析到的数字结合
+                            Status::StatusNega(cur_num * 10 + Self::c2int(*n as char))
+                        }
+                        _ => Status::StatusEnd(0),
+                    }
+                }
+                Status::StatusPosi(cur_num) => {
+                    match n {
+                        b'0'..=b'9' => {
+                            // 与解析到的数字结合
+                            Status::StatusPosi(cur_num * 10 + Self::c2int(*n as char))
+                        }
+                        _ => Status::StatusEnd(0),
+                    }
+                }
+                Status::StatusEnd(_) => break,
+            };
+        }
+        match status {
+            Status::StatusPosi(ans) | Status::StatusNega(ans) | Status::StatusEnd(ans) => ans,
+            Status::StatusWait => 0,
+        }
+    }
+
     fn is_digit(x: u8) -> bool {
         x >= b'0' && x <= b'9'
     }
+
+    fn c2int(c: char) -> i32 {
+        (c as u8 - b'0') as i32
+    }
+}
+
+enum Status {
+    StatusWait,
+    StatusPosi(i32),
+    StatusNega(i32),
+    StatusEnd(i32),
 }
 
 #[cfg(test)]
@@ -93,5 +145,6 @@ mod tests {
     fn test_itoa2() {
         assert_eq!(Solution::my_atoi("-91283472332".to_string()), -2147483648);
         assert_eq!(Solution::my_atoi("+2".to_string()), 2);
+        assert_eq!(Solution::my_atoi2("+2".to_string()), 2);
     }
 }
