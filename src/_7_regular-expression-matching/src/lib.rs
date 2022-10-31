@@ -35,6 +35,10 @@ p = "c*a*b"
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/regular-expression-matching
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+## 参考的一些题解
+- https://leetcode.cn/problems/regular-expression-matching/solutions/1418712/by-lebron-s-u27g/
+
 */
 
 ///
@@ -45,8 +49,10 @@ struct Solution {}
 
 impl Solution {
     pub fn is_match(s: String, p: String) -> bool {
-        let s_vec: Vec<char> = s.chars().collect();
-        let p_vec: Vec<char> = p.chars().collect();
+        let s1 = format!("{}{}", " ", s);
+        let p1 = format!("{}{}", " ", p);
+        let s_vec: Vec<char> = s1.chars().collect();
+        let p_vec: Vec<char> = p1.chars().collect();
         return Solution::style_1(s_vec, p_vec);
     }
 
@@ -55,24 +61,48 @@ impl Solution {
         if p.is_empty() {
             return true;
         }
-        if s.is_empty() && p.is_empty() {
+        if s.is_empty() || p.is_empty() {
             return true;
         }
-        let s_vec: Vec<char> = s;
-        let p_vec: Vec<char> = p;
-        let s_l = s_vec.len();
-        let p_l = p_vec.len();
-        let mut i = s_l - 1;
-        let mut j = p_l - 1;
-        if s_vec[i] == p_vec[j] {
-            return Solution::style_1(s_vec[0..i].to_vec(), p_vec[0..j].to_vec());
-        } else if p_vec[j] == '*' {
-            return Solution::style_1(s_vec[0..=i].to_vec(), p_vec[0..j].to_vec());
-        } else if p_vec[j] == '.' {
-            return true;
-        } else {
-            return false;
+        let m = s.len();
+        let n = p.len();
+        // init dp status array
+        let mut dp: Vec<Vec<bool>> = Vec::with_capacity(m);
+        for _ in 0..=n {
+            let mut tmp_arr2: Vec<bool> = vec![];
+            for _ in 0..=m {
+                tmp_arr2.push(false);
+            }
+            dp.push(tmp_arr2);
         }
+
+        for i in 1..n {
+            if p[i] == '*' {
+                if i - 2 >= 0 {
+                    dp[i][0] = dp[i - 2][0];
+                }
+            }
+        }
+        // 这种情况一定匹配
+        dp[0][0] = true;
+        for i in 1..n {
+            for j in 1..m {
+                if p[i] == s[j] {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if p[i] == '.' {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if p[i] == '*' {
+                    // 此情况最复杂
+                    if p[i - 1] != s[j] && p[i - 1] != '.' {
+                        dp[i][j] = dp[i - 2][j];
+                    } else {
+                        dp[i][j] = dp[i - 2][j] || dp[i][j - 1];
+                    }
+                }
+            }
+        }
+
+        return dp[n - 1][m - 1];
     }
 }
 
@@ -82,13 +112,14 @@ mod tests {
 
     #[test]
     fn test_trace_back() {
+        assert_eq!(Solution::is_match("".to_string(), "".to_string()), true);
         assert_eq!(
             Solution::is_match("this aaa".to_string(), "this a*".to_string()),
             true
         );
         assert_eq!(Solution::is_match("aa".to_string(), "a".to_string()), false);
-        assert_eq!(Solution::is_match("aa".to_string(), "a*".to_string()), true);
         assert_eq!(Solution::is_match("ab".to_string(), ".*".to_string()), true);
+        assert_eq!(Solution::is_match("aa".to_string(), "a*".to_string()), true);
         assert_eq!(
             Solution::is_match("aab".to_string(), "c*a*b".to_string()),
             true
@@ -102,5 +133,11 @@ mod tests {
         let i = arr1.len() - 1;
         println!("{:?}", arr1[0..=i].to_vec());
         assert!(false);
+    }
+
+    #[test]
+    fn test_vec_len1() {
+        let arr1 = [0; 10];
+        dbg!(arr1);
     }
 }
