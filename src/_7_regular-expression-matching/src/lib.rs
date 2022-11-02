@@ -96,7 +96,7 @@ impl Solution {
                     if p[i - 1] != s[j] && p[i - 1] != '.' {
                         dp[i][j] = dp[i - 2][j];
                     } else {
-                        dp[i][j] = dp[i - 2][j] || dp[i][j - 1];
+                        dp[i][j] = dp[i - 2][j - 1] || dp[i][j - 1];
                     }
                 }
             }
